@@ -1,5 +1,5 @@
 """
-Django settings for dbug project.
+Django settings for tutorial project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.7/topics/settings/
@@ -17,7 +17,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'yn!w55+vpn9t_3o_l&=0!nmgj*zkx(ev981weksu)h%w7g7aj6'
+SECRET_KEY = 'g6z9)!uu!3hu2&d0-37*t$uhn+frrr2*ml8spc#wbyuda4j@#b'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -36,6 +36,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'snippets',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -46,11 +48,12 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'qinspect.middleware.QueryInspectMiddleware',
 )
 
-ROOT_URLCONF = 'dbug.urls'
+ROOT_URLCONF = 'tutorial.urls'
 
-WSGI_APPLICATION = 'dbug.wsgi.application'
+WSGI_APPLICATION = 'tutorial.wsgi.application'
 
 
 # Database
@@ -81,3 +84,103 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
+
+LOG_DIR = "~/Workspace/temp/log"
+
+
+#################
+# Query Inspector
+#################
+
+# Whether the Query Inspector should do anything (default: False)
+QUERY_INSPECT_ENABLED = True
+
+# Whether to log the stats via Django logging (default: True)
+QUERY_INSPECT_LOG_STATS = True
+
+# Whether to add stats headers (default: True)
+QUERY_INSPECT_HEADER_STATS = True
+
+# Whether to log duplicate queries (default: False)
+QUERY_INSPECT_LOG_QUERIES = True
+
+# Whether to log queries that are above an absolute limit (default: None - disabled)
+QUERY_INSPECT_ABSOLUTE_LIMIT = 100  # in milliseconds
+
+# Whether to log queries that are more than X standard deviations above the mean query time (default: None - disabled)
+QUERY_INSPECT_STANDARD_DEVIATION_LIMIT = 2
+
+QUERY_LOG_ALL = True
+
+#################
+# Logging to disk
+#################
+# https://docs.djangoproject.com/en/1.7/topics/logging/#topic-logging-parts-loggers
+
+LOGGING = {
+    'version': 1,
+    # 'disable_existing_loggers': True,
+    # 'root': {
+    #     'level': 'DEBUG',
+    #     'handlers': ['console', ],   # Here you define the active handlers
+    # },
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'generic': {
+            'format': '%(asctime)s %(module)s [%(process)d] [%(levelname)s] %(message)s',
+            'datefmt': '%Y-%m-%d %H:%M:%S',
+            'class': 'logging.Formatter',
+        },
+    },
+    'handlers': {
+        # 'mail_admins': {
+        #     'level': 'ERROR',
+        #     'filters': ['require_debug_false'],
+        #     'class': 'django.utils.log.AdminEmailHandler'
+        # },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        },
+        'error_file': {
+            'class': 'logging.FileHandler',
+            'formatter': 'generic',
+            'filename': os.path.join(LOG_DIR, 'django_logger.error.log'),
+        },
+        'access_file': {
+            'class': 'logging.FileHandler',
+            'formatter': 'generic',
+            'filename': os.path.join(LOG_DIR, 'django_logger.access.log'),
+        },
+        # 'celery': {
+        #     'level': 'INFO',
+        #     'class': 'logging.FileHandler',
+        #     'filename': os.path.join(LOG_DIR, 'django_celery.error.log'),
+        #     'formatter': 'generic',
+        # },
+    },
+    'loggers': {
+        # 'django.request': {
+        #     'handlers': ['mail_admins'],
+        #     'level': 'ERROR',
+        #     'propagate': True,
+        # },
+        # 'django.db.backends': {
+        #     'level': 'ERROR',
+        #     'handlers': ['console'],
+        #     'propagate': False,
+        # },
+        'snippets': {
+            'handlers': ['console', ],
+            'level': 'DEBUG',
+        },
+        'qinspect': {
+            'handlers': ['console',],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    }
+}

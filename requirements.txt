@@ -1,6 +1,4 @@
-# django-debugging
-Django Debugging Talk at LA Django March 2015
+Django==1.7.7
 
-
-django-queryinspect
 git+git://github.com/seperman/django-queryinspect@master#egg=django-queryinspect-dev
+
