@@ -1,5 +1,5 @@
 """
-Django settings for tutorial project.
+Django settings for dbug project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.7/topics/settings/
@@ -36,8 +36,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
     'snippets',
+    'fibonacci',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -51,9 +51,9 @@ MIDDLEWARE_CLASSES = (
     'qinspect.middleware.QueryInspectMiddleware',
 )
 
-ROOT_URLCONF = 'tutorial.urls'
+ROOT_URLCONF = 'dbug.urls'
 
-WSGI_APPLICATION = 'tutorial.wsgi.application'
+WSGI_APPLICATION = 'dbug.wsgi.application'
 
 
 # Database
@@ -62,7 +62,7 @@ WSGI_APPLICATION = 'tutorial.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'no_upload/db.sqlite3'),
     }
 }
 
@@ -84,9 +84,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
-
-LOG_DIR = "~/Workspace/temp/log"
-
 
 #################
 # Query Inspector
@@ -148,12 +145,12 @@ LOGGING = {
         'error_file': {
             'class': 'logging.FileHandler',
             'formatter': 'generic',
-            'filename': os.path.join(LOG_DIR, 'django_logger.error.log'),
+            'filename': os.path.join(BASE_DIR, 'no_upload/django_logger.error.log'),
         },
         'access_file': {
             'class': 'logging.FileHandler',
             'formatter': 'generic',
-            'filename': os.path.join(LOG_DIR, 'django_logger.access.log'),
+            'filename': os.path.join(BASE_DIR, 'no_upload/django_logger.access.log'),
         },
         # 'celery': {
         #     'level': 'INFO',
